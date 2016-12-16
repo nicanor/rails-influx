@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+
+  app:
+    build: app
+    command: rails server -p 3000 -b '0.0.0.0'
+    volumes:
+      - ./app/:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - lognet
+
+  influx:
+    image: tutum/influxdb:0.9
+    environment:
+      ADMIN_USER: "root"
+      INFLUXDB_INIT_PWD: "root"
+      PRE_CREATE_DB: rails
+    ports:
+        - 8083:8083
+        - 8086:8086
+    networks:
+        - lognet
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    networks:
+      - lognet
+
+networks:
+  lognet:
+    driver: bridge
