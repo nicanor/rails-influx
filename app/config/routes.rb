@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
+  resources :cats
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  get :one, to: 'application#one'
+  get :two, to: 'application#two'
+  get :three, to: 'application#three'
+  
+  root 'application#one'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
