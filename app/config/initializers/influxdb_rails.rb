@@ -28,10 +28,12 @@ end
 #   db_runtime: 0.157
 # }
 ActiveSupport::Notifications.subscribe('process_action.action_controller') do |name, start, finish, id, data|
+  Rails.logger.info data.to_s
+  data[:db_runtime] = data[:db_runtime].to_f
   InfluxDB::Rails.client.write_point(
-    data[:controller], {
-      values: {total:(finish-start), view: data[:view_runtime], db: data[:db_runtime]},
-      tags: {action: data[:action], format: data[:format], method: data[:method], status: data[:status]}
+    'process_action', {
+      values: {view: data[:view_runtime], db: data[:db_runtime]},
+      tags: data
     }
   )
 end
